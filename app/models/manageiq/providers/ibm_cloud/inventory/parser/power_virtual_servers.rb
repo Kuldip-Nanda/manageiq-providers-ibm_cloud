@@ -118,26 +118,26 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
         :read_only    => true
       )
 
-      if instance.software_licenses
+      next unless instance.software_licenses
         ldesc = ""
         if instance.software_licenses.ibmi_css
           ldesc = "IBMi Cloud Storage Solution(ibmiCSS), "
         end
 
         if instance.software_licenses.ibmi_pha
-          ldesc = ldesc + "IBMi Power High Availability(ibmiPHA), "
+          ldesc +=  "IBMi Power High Availability(ibmiPHA), "
         end
 
         if instance.software_licenses.ibmi_rds
-          ldesc = ldesc + "IBMi Rational Dev Studio(ibmiRDS)"
+          ldesc += "IBMi Rational Dev Studio(ibmiRDS)"
           if instance.software_licenses.ibmi_rds_users
-            ldesc = ldesc + " - (%d User Licenses)"%[instance.software_licenses.ibmi_rds_users]
+            ldesc +=  " - (%d User Licenses)" % [instance.software_licenses.ibmi_rds_users]
           end
-          ldesc = ldesc + ", "
+          ldesc += "#{ldec}, "
         end
 
         if instance.software_licenses.ibmi_dbq
-          ldesc = ldesc + "IBMi Cloud Storage Solution(ibmiDBQ), "
+          ldesc +=  "IBMi Cloud Storage Solution(ibmiDBQ), "
         end
 
         if ldesc != ""
@@ -149,7 +149,7 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
             :description  => _('Software Licenses'),
             :value        => ldesc,
             :read_only    => true
-            )
+          )
         end
       end
     end
