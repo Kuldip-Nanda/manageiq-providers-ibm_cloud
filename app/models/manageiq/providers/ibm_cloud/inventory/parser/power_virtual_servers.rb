@@ -118,40 +118,40 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
         :read_only    => true
       )
 
-      next unless instance.software_licenses
-        ldesc = ""
-        if instance.software_licenses.ibmi_css
-          ldesc = "IBMi Cloud Storage Solution(ibmiCSS), "
-        end
+      next unless instance.software_licenses != ""
 
-        if instance.software_licenses.ibmi_pha
-          ldesc +=  "IBMi Power High Availability(ibmiPHA), "
-        end
-
-        if instance.software_licenses.ibmi_rds
-          ldesc += "IBMi Rational Dev Studio(ibmiRDS)"
-          if instance.software_licenses.ibmi_rds_users
-            ldesc +=  " - (%d User Licenses)" % [instance.software_licenses.ibmi_rds_users]
-          end
-          ldesc += "#{ldec}, "
-        end
-
-        if instance.software_licenses.ibmi_dbq
-          ldesc +=  "IBMi Cloud Storage Solution(ibmiDBQ), "
-        end
-
-        if ldesc != ""
-          ldesc = ldesc[0...-2]
-          persister.vms_and_templates_advanced_settings.build(
-            :resource     => ps_vmi,
-            :name         => 'software_licenses',
-            :display_name => _('Software Licenses'),
-            :description  => _('Software Licenses'),
-            :value        => ldesc,
-            :read_only    => true
-          )
-        end
+      ldesc = ""
+      if instance.software_licenses.ibmi_css
+        ldesc = "IBMi Cloud Storage Solution (ibmiCSS), "
       end
+
+      if instance.software_licenses.ibmi_pha
+        ldesc += "IBMi Power High Availability (ibmiPHA), "
+      end
+
+      if instance.software_licenses.ibmi_rds
+        ldesc += "IBMi Rational Dev Studio(ibmiRDS)"
+        if instance.software_licenses.ibmi_rds_users
+          ldesc += " - (%d User Licenses)" % [instance.software_licenses.ibmi_rds_users]
+        end
+        ldesc += "#{ldec}, "
+      end
+
+      if instance.software_licenses.ibmi_dbq
+        ldesc += "IBMi Cloud Storage Solution (ibmiDBQ), "
+      end
+
+      next unless ldesc != ""
+
+      ldesc = ldesc[0...-2]
+      persister.vms_and_templates_advanced_settings.build(
+        :resource     => ps_vmi,
+        :name         => 'software_licenses',
+        :display_name => _('Software Licenses'),
+        :description  => _('Software Licenses'),
+        :value        => ldesc,
+        :read_only    => true
+      )
     end
   end
 
