@@ -107,6 +107,51 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
         :value        => instance.proc_type,
         :read_only    => true
       )
+
+      # saving pin_policy
+      persister.vms_and_templates_advanced_settings.build(
+        :resource     => ps_vmi,
+        :name         => 'pin_policy',
+        :display_name => _('Pin Policy'),
+        :description  => _('VM Pin Policy'),
+        :value        => instance.pin_policy,
+        :read_only    => true
+      )
+
+      if instance.software_licenses
+        ldesc = ""
+        if instance.software_licenses.ibmi_css
+          ldesc = "IBMi Cloud Storage Solution(ibmiCSS), "
+        end
+
+        if instance.software_licenses.ibmi_pha
+          ldesc = ldesc + "IBMi Power High Availability(ibmiPHA), "
+        end
+
+        if instance.software_licenses.ibmi_rds
+          ldesc = ldesc + "IBMi Rational Dev Studio(ibmiRDS)"
+          if instance.software_licenses.ibmi_rds_users
+            ldesc = ldesc + " - (%d User Licenses)"%[instance.software_licenses.ibmi_rds_users]
+          end
+          ldesc = ldesc + ", "
+        end
+
+        if instance.software_licenses.ibmi_dbq
+          ldesc = ldesc + "IBMi Cloud Storage Solution(ibmiDBQ), "
+        end
+
+        if ldesc != ""
+          ldesc = ldesc[0...-2]
+          persister.vms_and_templates_advanced_settings.build(
+            :resource     => ps_vmi,
+            :name         => 'software_licenses',
+            :display_name => _('Software Licenses'),
+            :description  => _('Software Licenses'),
+            :value        => ldesc,
+            :read_only    => true
+            )
+        end
+      end
     end
   end
 

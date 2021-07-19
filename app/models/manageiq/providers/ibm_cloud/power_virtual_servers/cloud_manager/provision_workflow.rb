@@ -148,6 +148,10 @@ class ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::Provisio
     end
   end
 
+  def validate_pin_policy(_field, _value, _dlg, _fld, value)
+    byebug
+  end
+
   def validate_ip_address(_field, _values, _dlg, _fld, value)
     return if value.blank?
 
