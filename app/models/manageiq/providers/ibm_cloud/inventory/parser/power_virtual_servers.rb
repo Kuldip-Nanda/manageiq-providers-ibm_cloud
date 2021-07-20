@@ -118,7 +118,7 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
         :read_only    => true
       )
 
-      next unless instance.software_licenses.nil?
+      next unless instance.software_licenses
 
       ldesc = ""
       if instance.software_licenses.ibmi_css
@@ -141,7 +141,7 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
         ldesc += "IBMi Cloud Storage Solution (ibmiDBQ), "
       end
 
-      next unless ldesc.empty?
+      next unless !ldesc.empty?
 
       ldesc = ldesc[0...-2]
       persister.vms_and_templates_advanced_settings.build(
