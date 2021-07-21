@@ -118,33 +118,8 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
         :read_only    => true
       )
 
-      next unless instance.software_licenses
-
-      ldesc = ""
-      if instance.software_licenses.ibmi_css
-        ldesc = "IBMi Cloud Storage Solution (ibmiCSS), "
-      end
-
-      if instance.software_licenses.ibmi_pha
-        ldesc += "IBMi Power High Availability (ibmiPHA), "
-      end
-
-      if instance.software_licenses.ibmi_rds
-        ldesc += "IBMi Rational Dev Studio(ibmiRDS)"
-        if instance.software_licenses.ibmi_rds_users
-          ldesc += " - (%d User Licenses)" % [instance.software_licenses.ibmi_rds_users]
-        end
-        ldesc += "#{ldec}, "
-      end
-
-      if instance.software_licenses.ibmi_dbq
-        ldesc += "IBMi Cloud Storage Solution (ibmiDBQ), "
-      end
-
-      next unless !ldesc.empty?
-
-      ldesc = ldesc[0...-2]
-      persister.vms_and_templates_advanced_settings.build(
+      ldesc = software_licenses_description(instance.software_licenses)
+      ldesc.empty? || persister.vms_and_templates_advanced_settings.build(
         :resource     => ps_vmi,
         :name         => 'software_licenses',
         :display_name => _('Software Licenses'),
@@ -315,5 +290,34 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
       :name    => persister.cloud_manager.name,
       :ems_ref => persister.cloud_manager.uid_ems
     )
+  end
+
+  def software_licenses_description(software_licenses)
+    ldesc = ""
+
+    if software_licenses
+      if software_licenses.ibmi_css
+        ldesc = "IBMi Cloud Storage Solution (ibmiCSS), "
+      end
+
+      if software_licenses.ibmi_pha
+        ldesc << "IBMi Power High Availability (ibmiPHA), "
+      end
+
+      if software_licenses.ibmi_rds
+        ldesc << if software_licenses.ibmi_rds_users
+                   "IBMi Rational Dev Studio (ibmiRDS) - (%d User Licenses)" % [software_licenses.ibmi_rds_users]
+                 else
+                   ldesc << "IBMi Rational Dev Studio (ibmiRDS), "
+                 end
+      end
+
+      if software_licenses.ibmi_dbq
+        ldesc << "IBMi Cloud Storage Solution (ibmiDBQ), "
+      end
+
+      ldesc.chomp!(", ")
+    end
+    ldesc
   end
 end
