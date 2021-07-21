@@ -296,13 +296,8 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
     ldesc = ""
 
     if software_licenses
-      if software_licenses.ibmi_css
-        ldesc = "IBMi Cloud Storage Solution (ibmiCSS), "
-      end
-
-      if software_licenses.ibmi_pha
-        ldesc << "IBMi Power High Availability (ibmiPHA), "
-      end
+      ldesc = "IBMi Cloud Storage Solution (ibmiCSS), " if software_licenses.ibmi_css
+      ldesc << "IBMi Power High Availability (ibmiPHA), " if software_licenses.ibmi_pha
 
       if software_licenses.ibmi_rds_users
         ldesc << "IBMi Rational Dev Studio (ibmiRDS)"
@@ -310,10 +305,7 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
         ldesc << ", "
       end
 
-      if software_licenses.ibmi_dbq
-        ldesc << "IBMi Cloud Storage Solution (ibmiDBQ), "
-      end
-
+      ldesc << "IBMi Cloud Storage Solution (ibmiDBQ), " if software_licenses.ibmi_dbq
       ldesc.chomp!(", ")
     end
     ldesc
