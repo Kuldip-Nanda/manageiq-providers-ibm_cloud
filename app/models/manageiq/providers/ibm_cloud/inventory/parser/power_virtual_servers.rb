@@ -119,7 +119,7 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
       )
 
       ldesc = software_licenses_description(instance.software_licenses)
-      ldesc.empty? || persister.vms_and_templates_advanced_settings.build(
+      ldesc.present? && persister.vms_and_templates_advanced_settings.build(
         :resource     => ps_vmi,
         :name         => 'software_licenses',
         :display_name => _('Software Licenses'),
@@ -304,12 +304,10 @@ class ManageIQ::Providers::IbmCloud::Inventory::Parser::PowerVirtualServers < Ma
         ldesc << "IBMi Power High Availability (ibmiPHA), "
       end
 
-      if software_licenses.ibmi_rds
-        ldesc << if software_licenses.ibmi_rds_users
-                   "IBMi Rational Dev Studio (ibmiRDS) - (%d User Licenses)" % [software_licenses.ibmi_rds_users]
-                 else
-                   ldesc << "IBMi Rational Dev Studio (ibmiRDS), "
-                 end
+      if software_licenses.ibmi_rds_users
+        ldesc << "IBMi Rational Dev Studio (ibmiRDS)"
+        ldesc << " - (%d User Licenses)" % [software_licenses.ibmi_rds_users] if software_licenses.ibmi_rds_users
+        ldesc << ", "
       end
 
       if software_licenses.ibmi_dbq

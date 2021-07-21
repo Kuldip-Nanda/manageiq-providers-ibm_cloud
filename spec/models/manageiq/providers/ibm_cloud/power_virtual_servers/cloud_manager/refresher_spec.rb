@@ -67,19 +67,19 @@ describe ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::Refre
       expect(Vm.count).to eq(3)
       expect(OperatingSystem.count).to eq(9)
       expect(MiqTemplate.count).to eq(6)
-      expect(ManageIQ::Providers::CloudManager::AuthKeyPair.count).to eq(52)
+      expect(ManageIQ::Providers::CloudManager::AuthKeyPair.count).to eq(53)
       expect(CloudVolume.count).to eq(5)
       expect(CloudNetwork.count).to eq(3)
       expect(CloudSubnet.count).to eq(3)
       expect(NetworkPort.count).to eq(5)
-      #expect(CloudSubnetNetworkPort.count).to eq(5)
+      expect(CloudSubnetNetworkPort.count).to eq(5)
     end
 
     def assert_ems_counts
       expect(ems.vms.count).to eq(3)
       expect(ems.miq_templates.count).to eq(6)
       expect(ems.operating_systems.count).to eq(9)
-      expect(ems.key_pairs.count).to eq(52)
+      expect(ems.key_pairs.count).to eq(53)
       expect(ems.network_manager.cloud_networks.count).to eq(3)
       expect(ems.network_manager.cloud_subnets.count).to eq(3)
       expect(ems.network_manager.network_ports.count).to eq(5)
